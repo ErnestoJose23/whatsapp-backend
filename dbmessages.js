@@ -4,7 +4,8 @@ const whatsappSchema = mongoose.Schema({
   message: String,
   name: String,
   timestamp: String,
+  chatroom: String,
   received: Boolean,
 });
 
-module.exports = mongoose.model("messageContent", whatsappSchema);
+module.exports = mongoose.model("messagecontent", whatsappSchema);
