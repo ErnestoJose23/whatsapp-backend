@@ -17,6 +17,12 @@ const pusher = new Pusher({
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  next();
+});
+
 const connection_url =
   "mongodb+srv://admin:fUi8PFzCUgWMRCp@cluster0.3ni6y.mongodb.net/whatsappdb?retryWrites=true&w=majority";
 
@@ -39,7 +45,7 @@ db.once("open", () => {
     if (change.operationType === "insert") {
       const messageDetails = change.fullDocument;
       pusher.trigger("messages", "inserted", {
-        name: messageDetails.user,
+        name: messageDetails.name,
         message: messageDetails.message,
       });
     } else {
