@@ -43,6 +43,9 @@ db.once("open", () => {
       pusher.trigger("messages", "inserted", {
         name: messageDetails.name,
         message: messageDetails.message,
+        timestamp: messageDetails.timestamp,
+        received: messageDetails.received,
+        chatroom: messageDetails.chatroom,
       });
     } else {
       console.log("Error triggering Pusher");
@@ -52,8 +55,19 @@ db.once("open", () => {
 
 app.get("/", (req, res) => res.status(200).send("hello wrld"));
 
-app.get("/messages/sync", (req, res) => {
+app.get(`/messages/sync`, (req, res) => {
   Messages.find((err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
+
+app.get(`/messages/:chatroom`, (req, res) => {
+  const chatroom = req.params.chatroom;
+  Messages.find({ chatroom: chatroom }, function (err, data) {
     if (err) {
       res.status(500).send(err);
     } else {
