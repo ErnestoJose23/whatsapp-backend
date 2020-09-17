@@ -4,6 +4,7 @@ const Pusher = require("pusher");
 const cors = require("cors");
 
 const Messages = require("./dbmessages.js");
+const Chatrooms = require("./dbchatrooms.js");
 
 const app = express();
 const port = process.env.PORT || 9000;
@@ -61,6 +62,28 @@ app.get(`/messages/sync`, (req, res) => {
       res.status(500).send(err);
     } else {
       res.status(200).send(data);
+    }
+  });
+});
+
+app.get(`/chatrooms/sync`, (req, res) => {
+  Chatrooms.find((err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
+
+app.post("/chatrooms/new", (req, res) => {
+  const dbMessage = req.body;
+
+  Chatrooms.create(dbMessage, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(201).send(data);
     }
   });
 });
